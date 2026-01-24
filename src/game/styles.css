@@ -4,10 +4,9 @@
   --color-bg: #0a0a0a;
   --color-surface: #1a1a1a;
   --color-text: #fafafa;
-  --color-text-muted: #888;
+  --color-text-muted: #666;
   --color-accent: #22c55e;
   --color-error: #ef4444;
-  --font-mono: ui-monospace, monospace;
 }
 
 * {
@@ -21,17 +20,19 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
-  padding: 2rem 1rem;
+  align-items: center;
+  padding: 1.5rem;
 }
 
 #app {
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 /* Topic */
@@ -40,16 +41,16 @@ body {
 }
 
 .topic-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
 }
 
 .topic-name {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-top: 0.25rem;
+  font-size: 1.75rem;
+  font-weight: 700;
 }
 
 /* Puzzle */
@@ -57,65 +58,70 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .emojis {
-  font-size: 4rem;
-  line-height: 1.2;
+  font-size: 5rem;
+  line-height: 1;
   text-align: center;
-  padding: 1rem;
 }
 
 /* Options */
 .options {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
   width: 100%;
 }
 
 .option-btn {
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 1.125rem 1.25rem;
   font-size: 1rem;
   font-weight: 500;
   text-align: left;
-  border: 2px solid var(--color-surface);
-  border-radius: 8px;
+  border: 2px solid transparent;
+  border-radius: 12px;
   background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .option-btn:hover:not(:disabled) {
-  border-color: var(--color-text-muted);
+  background: #222;
+}
+
+.option-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .option-btn:disabled {
   cursor: default;
-  opacity: 0.7;
 }
 
 .option-btn.correct {
   border-color: var(--color-accent);
-  background: rgba(34, 197, 94, 0.15);
-  opacity: 1;
+  background: rgba(34, 197, 94, 0.12);
 }
 
 .option-btn.incorrect {
   border-color: var(--color-error);
-  background: rgba(239, 68, 68, 0.15);
-  opacity: 1;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.option-btn:disabled:not(.correct):not(.incorrect) {
+  opacity: 0.5;
 }
 
 /* Result */
 .result {
   text-align: center;
-  padding: 2rem;
+  padding: 1.75rem;
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: 16px;
 }
 
 .result.hidden {
@@ -123,8 +129,9 @@ body {
 }
 
 .result-status {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
 .result-status.correct {
@@ -136,43 +143,46 @@ body {
 }
 
 .result-answer {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  color: var(--color-text-muted);
 }
 
 .result-actions {
   display: flex;
   gap: 0.75rem;
-  justify-content: center;
   margin-top: 1.5rem;
 }
 
 .btn {
-  padding: 0.75rem 1.5rem;
+  flex: 1;
+  padding: 0.875rem 1.25rem;
   font-size: 1rem;
   font-weight: 600;
-  border: 2px solid var(--color-surface);
-  border-radius: 8px;
-  background: var(--color-surface);
+  border: none;
+  border-radius: 10px;
+  background: #222;
   color: var(--color-text);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
-  border-color: var(--color-text-muted);
+  background: #2a2a2a;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn-primary {
   background: var(--color-accent);
-  border-color: var(--color-accent);
   color: var(--color-bg);
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
-  border-color: var(--color-accent);
+  background: #1fa54e;
 }
 
 /* Utility */

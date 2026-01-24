@@ -2,33 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glyph — Think Opposite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Glyph</title>
   <link rel="stylesheet" href="/game/styles.css">
 </head>
 <body>
   <div id="app">
     <!-- Topic -->
     <header class="topic">
-      <span class="topic-label">Topic</span>
-      <h2 class="topic-name" id="topic"></h2>
+      <div class="topic-label">Topic</div>
+      <h1 class="topic-name" id="topic"></h1>
     </header>
 
     <!-- Puzzle -->
     <main class="puzzle">
       <div class="emojis" id="emojis"></div>
-      
-      <!-- Options -->
       <div class="options" id="options"></div>
     </main>
 
-    <!-- Result (hidden until solved) -->
+    <!-- Result -->
     <div id="result" class="result hidden">
       <div class="result-status" id="result-status"></div>
       <div class="result-answer" id="result-answer"></div>
       <div class="result-actions">
         <button id="share-btn" class="btn">Share</button>
-        <button id="next-btn" class="btn btn-primary">Next Puzzle</button>
+        <button id="next-btn" class="btn btn-primary">Next</button>
       </div>
     </div>
   </div>
