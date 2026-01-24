@@ -14,6 +14,7 @@ const modalTitle = document.getElementById('modal-title');
 const newPuzzleBtn = document.getElementById('new-puzzle-btn');
 const modalCloseBtn = document.getElementById('modal-close');
 const cancelBtn = document.getElementById('cancel-btn');
+const filterSearch = document.getElementById('filter-search');
 
 // Form fields
 const topicInput = document.getElementById('puzzle-topic');
@@ -22,7 +23,6 @@ const answerInput = document.getElementById('puzzle-answer');
 const wrong1Input = document.getElementById('puzzle-wrong-1');
 const wrong2Input = document.getElementById('puzzle-wrong-2');
 const wrong3Input = document.getElementById('puzzle-wrong-3');
-const dateInput = document.getElementById('puzzle-date');
 
 // Preview
 const previewTopic = document.getElementById('preview-topic');
@@ -45,28 +45,25 @@ async function loadPuzzles() {
   // TODO: Replace with actual API call
   puzzles = [
     {
-      id: '1',
+      id: 'puzzle-001',
       topic: '90s Movies',
       emojis: '😢🐢🔇',
       answer: 'The Fast and the Furious',
       wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction'],
-      scheduledDate: '2026-01-24',
     },
     {
-      id: '2',
+      id: 'puzzle-002',
       topic: 'Pixar',
       emojis: '⬇️',
       answer: 'Up',
       wrongAnswers: ['Cars', 'Brave', 'Coco'],
-      scheduledDate: '2026-01-25',
     },
     {
-      id: '3',
-      topic: 'Classic Rock Bands',
-      emojis: '🔥❄️🌶️',
+      id: 'puzzle-003',
+      topic: 'Classic Rock',
+      emojis: '❄️🌶️',
       answer: 'Red Hot Chili Peppers',
       wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC'],
-      scheduledDate: null,
     },
   ];
 }
@@ -74,13 +71,20 @@ async function loadPuzzles() {
 /**
  * Render puzzle table
  */
-function renderPuzzleTable() {
-  puzzleTableBody.innerHTML = puzzles.map(puzzle => `
+function renderPuzzleTable(filter = '') {
+  const filtered = filter 
+    ? puzzles.filter(p => 
+        p.topic.toLowerCase().includes(filter) ||
+        p.answer.toLowerCase().includes(filter) ||
+        p.emojis.includes(filter)
+      )
+    : puzzles;
+
+  puzzleTableBody.innerHTML = filtered.map(puzzle => `
     <tr data-id="${puzzle.id}">
       <td>${puzzle.topic}</td>
       <td class="emojis">${puzzle.emojis}</td>
       <td>${puzzle.answer}</td>
-      <td>${puzzle.scheduledDate || '—'}</td>
       <td>
         <button class="btn btn-small edit-btn" data-id="${puzzle.id}">Edit</button>
         <button class="btn btn-small delete-btn" data-id="${puzzle.id}">Delete</button>
@@ -93,19 +97,14 @@ function renderPuzzleTable() {
  * Setup event listeners
  */
 function setupEventListeners() {
-  // New puzzle button
   newPuzzleBtn.addEventListener('click', () => openModal());
-
-  // Modal close buttons
   modalCloseBtn.addEventListener('click', closeModal);
   cancelBtn.addEventListener('click', closeModal);
 
-  // Click outside modal to close
   puzzleModal.addEventListener('click', (e) => {
     if (e.target === puzzleModal) closeModal();
   });
 
-  // Form submission
   puzzleForm.addEventListener('submit', handleSubmit);
 
   // Live preview
@@ -116,7 +115,12 @@ function setupEventListeners() {
   wrong2Input.addEventListener('input', updatePreview);
   wrong3Input.addEventListener('input', updatePreview);
 
-  // Table actions (event delegation)
+  // Search filter
+  filterSearch.addEventListener('input', (e) => {
+    renderPuzzleTable(e.target.value.toLowerCase());
+  });
+
+  // Table actions
   puzzleTableBody.addEventListener('click', (e) => {
     const editBtn = e.target.closest('.edit-btn');
     const deleteBtn = e.target.closest('.delete-btn');
@@ -146,7 +150,6 @@ function openModal(puzzle = null) {
     wrong1Input.value = puzzle.wrongAnswers[0] || '';
     wrong2Input.value = puzzle.wrongAnswers[1] || '';
     wrong3Input.value = puzzle.wrongAnswers[2] || '';
-    dateInput.value = puzzle.scheduledDate || '';
   } else {
     puzzleForm.reset();
   }
@@ -191,7 +194,6 @@ function updatePreview() {
     wrong3Input.value || 'Wrong 3',
   ];
   
-  // Shuffle for preview
   const options = shuffle([correct, ...wrong]);
   
   previewOptions.innerHTML = options.map(opt => `
@@ -214,7 +216,6 @@ async function handleSubmit(e) {
       wrong2Input.value.trim(),
       wrong3Input.value.trim(),
     ],
-    scheduledDate: dateInput.value || null,
   };
 
   if (editingPuzzle) {
@@ -234,7 +235,7 @@ async function handleSubmit(e) {
 async function createPuzzle(data) {
   // TODO: Replace with actual API call
   console.log('Creating puzzle:', data);
-  puzzles.push({ id: Date.now().toString(), ...data });
+  puzzles.push({ id: `puzzle-${Date.now()}`, ...data });
 }
 
 /**

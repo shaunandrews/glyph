@@ -5,7 +5,6 @@
 // State
 let puzzle = null;
 let solved = false;
-let selectedAnswer = null;
 
 // DOM Elements
 const topicEl = document.getElementById('topic');
@@ -15,12 +14,26 @@ const resultEl = document.getElementById('result');
 const resultStatus = document.getElementById('result-status');
 const resultAnswer = document.getElementById('result-answer');
 const shareBtn = document.getElementById('share-btn');
+const nextBtn = document.getElementById('next-btn');
 
 /**
  * Initialize the game
  */
 async function init() {
-  puzzle = await fetchTodaysPuzzle();
+  await loadPuzzle();
+  shareBtn.addEventListener('click', handleShare);
+  nextBtn.addEventListener('click', handleNext);
+}
+
+/**
+ * Load a puzzle
+ */
+async function loadPuzzle() {
+  solved = false;
+  resultEl.classList.add('hidden');
+  optionsEl.innerHTML = '';
+  
+  puzzle = await fetchPuzzle();
   
   if (!puzzle) {
     showError('Could not load puzzle');
@@ -28,15 +41,14 @@ async function init() {
   }
 
   renderPuzzle();
-  shareBtn.addEventListener('click', handleShare);
 }
 
 /**
- * Fetch today's puzzle from API
+ * Fetch a puzzle from API
  */
-async function fetchTodaysPuzzle() {
+async function fetchPuzzle() {
   try {
-    const res = await fetch('/api/puzzle/today');
+    const res = await fetch('/api/puzzle');
     if (!res.ok) throw new Error('No puzzle');
     return await res.json();
   } catch (e) {
@@ -75,10 +87,9 @@ function renderOptions() {
 async function handleOptionClick(answer, btn) {
   if (solved) return;
   
-  selectedAnswer = answer;
   const result = await submitGuess(puzzle.id, answer);
   
-  solved = true;
+  solved = result.correct;
   
   // Mark buttons
   document.querySelectorAll('.option-btn').forEach(b => {
@@ -118,13 +129,20 @@ function showResult(result) {
 
   if (result.correct) {
     resultStatus.textContent = '🎉 Correct!';
-    resultStatus.classList.add('correct');
+    resultStatus.className = 'result-status correct';
   } else {
     resultStatus.textContent = '❌ Not quite';
-    resultStatus.classList.add('incorrect');
+    resultStatus.className = 'result-status incorrect';
   }
 
   resultAnswer.textContent = result.answer;
+}
+
+/**
+ * Handle next puzzle
+ */
+function handleNext() {
+  loadPuzzle();
 }
 
 /**

@@ -28,16 +28,25 @@ const MIME_TYPES = {
 // In-memory puzzle store
 const puzzles = [
   {
-    id: 'demo-001',
+    id: 'puzzle-001',
     topic: '90s Movies',
     emojis: '😢🐢🔇',
     answer: 'The Fast and the Furious',
-    wrongAnswers: [
-      'Forrest Gump',
-      'The Silence of the Lambs',
-      'Pulp Fiction'
-    ],
-    scheduledDate: new Date().toISOString().split('T')[0],
+    wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction'],
+  },
+  {
+    id: 'puzzle-002',
+    topic: 'Pixar',
+    emojis: '⬇️',
+    answer: 'Up',
+    wrongAnswers: ['Cars', 'Brave', 'Coco'],
+  },
+  {
+    id: 'puzzle-003',
+    topic: 'Classic Rock',
+    emojis: '❄️🌶️',
+    answer: 'Red Hot Chili Peppers',
+    wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC'],
   },
 ];
 
@@ -55,6 +64,13 @@ function shuffle(array) {
   return arr;
 }
 
+/**
+ * Get a random puzzle
+ */
+function getRandomPuzzle() {
+  return puzzles[Math.floor(Math.random() * puzzles.length)];
+}
+
 function handleRequest(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   let path = url.pathname;
@@ -69,17 +85,9 @@ function handleRequest(req, res) {
     return res.end();
   }
 
-  // API: Today's puzzle
-  if (path === '/api/puzzle/today' && req.method === 'GET') {
-    const today = new Date().toISOString().split('T')[0];
-    const puzzle = puzzles.find(p => p.scheduledDate === today);
-    
-    if (!puzzle) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: 'No puzzle today' }));
-    }
-
-    // Shuffle options (correct + wrong answers)
+  // API: Get a puzzle (random)
+  if (path === '/api/puzzle' && req.method === 'GET') {
+    const puzzle = getRandomPuzzle();
     const options = shuffle([puzzle.answer, ...puzzle.wrongAnswers]);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -89,7 +97,28 @@ function handleRequest(req, res) {
       emojis: puzzle.emojis,
       options: options,
       correctAnswer: puzzle.answer,
-      date: puzzle.scheduledDate,
+    }));
+  }
+
+  // API: Get specific puzzle by ID
+  if (path.match(/^\/api\/puzzle\/[\w-]+$/) && !path.endsWith('/solve') && req.method === 'GET') {
+    const puzzleId = path.split('/')[3];
+    const puzzle = puzzles.find(p => p.id === puzzleId);
+
+    if (!puzzle) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Puzzle not found' }));
+    }
+
+    const options = shuffle([puzzle.answer, ...puzzle.wrongAnswers]);
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      id: puzzle.id,
+      topic: puzzle.topic,
+      emojis: puzzle.emojis,
+      options: options,
+      correctAnswer: puzzle.answer,
     }));
   }
 
@@ -133,7 +162,6 @@ function handleRequest(req, res) {
   }
 
   // Static files
-  // Route / to game, /admin to admin
   if (path === '/') path = '/game/index.html';
   else if (path === '/admin') path = '/admin/index.html';
   else if (!extname(path)) path = path + '/index.html';
@@ -164,6 +192,6 @@ createServer(handleRequest).listen(PORT, () => {
    Game:  http://localhost:${PORT}/
    Admin: http://localhost:${PORT}/admin
 
-   API:   http://localhost:${PORT}/api/puzzle/today
+   API:   http://localhost:${PORT}/api/puzzle
 `);
 });

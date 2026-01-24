@@ -12,7 +12,6 @@
       <h1>Glyph Admin</h1>
       <nav>
         <a href="#puzzles" class="active">Puzzles</a>
-        <a href="#calendar">Calendar</a>
         <a href="#stats">Stats</a>
       </nav>
     </header>
@@ -26,12 +25,7 @@
         </div>
         
         <div class="filters">
-          <select id="filter-status">
-            <option value="all">All</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="unscheduled">Unscheduled</option>
-          </select>
-          <input type="search" id="filter-search" placeholder="Search...">
+          <input type="search" id="filter-search" placeholder="Search puzzles...">
         </div>
 
         <table class="puzzle-table">
@@ -40,7 +34,6 @@
               <th>Topic</th>
               <th>Emojis</th>
               <th>Answer</th>
-              <th>Scheduled</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -79,11 +72,6 @@
               <input type="text" id="puzzle-wrong-1" placeholder="Wrong answer 1" required>
               <input type="text" id="puzzle-wrong-2" placeholder="Wrong answer 2" required>
               <input type="text" id="puzzle-wrong-3" placeholder="Wrong answer 3" required>
-            </div>
-
-            <div class="form-group">
-              <label for="puzzle-date">Schedule Date (optional)</label>
-              <input type="date" id="puzzle-date">
             </div>
 
             <!-- Preview -->
