@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glyph — Think Opposite</title>
+  <link rel="stylesheet" href="/game/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Topic -->
+    <header class="topic">
+      <span class="topic-label">Today's Topic</span>
+      <h2 class="topic-name" id="topic"></h2>
+    </header>
+
+    <!-- Puzzle -->
+    <main class="puzzle">
+      <div class="emojis" id="emojis"></div>
+      
+      <!-- Options -->
+      <div class="options" id="options"></div>
+    </main>
+
+    <!-- Result (hidden until solved) -->
+    <div id="result" class="result hidden">
+      <div class="result-status" id="result-status"></div>
+      <div class="result-answer" id="result-answer"></div>
+      <button id="share-btn" class="share-btn">Share</button>
+    </div>
+  </div>
+
+  <script src="/game/game.js" type="module"></script>
+</body>
+</html>

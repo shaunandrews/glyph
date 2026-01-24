@@ -1,0 +1,75 @@
+{
+  "puzzles": [
+    {
+      "topic": "Pixar",
+      "emojis": "⬇️",
+      "answer": "Up",
+      "acceptedAnswers": [],
+      "notes": "Down → Up. Classic simple one."
+    },
+    {
+      "topic": "90s Movies",
+      "emojis": "😢🐢🔇",
+      "answer": "The Fast and the Furious",
+      "acceptedAnswers": ["Fast and the Furious", "Fast & Furious"],
+      "notes": "Sad→Happy/Mad, Slow→Fast, Quiet→Loud. Furious = angry/loud energy."
+    },
+    {
+      "topic": "Classic Rock Bands",
+      "emojis": "🥶🥶🌶️",
+      "answer": "Red Hot Chili Peppers",
+      "acceptedAnswers": ["RHCP", "Chili Peppers"],
+      "notes": "Cold Cold Pepper → Hot Hot Pepper → Red Hot Chili Peppers"
+    },
+    {
+      "topic": "Disney Movies",
+      "emojis": "❄️👸",
+      "answer": "Frozen",
+      "acceptedAnswers": [],
+      "notes": "Wait, this isn't opposites... need to rethink. Maybe: 🔥👸 → Cold Queen → Frozen?"
+    },
+    {
+      "topic": "TV Shows",
+      "emojis": "👎💀",
+      "answer": "The Good Place",
+      "acceptedAnswers": ["Good Place"],
+      "notes": "Bad Dead → Good Alive → The Good Place (about afterlife)"
+    },
+    {
+      "topic": "Food",
+      "emojis": "🥶🐕",
+      "answer": "Hot Dog",
+      "acceptedAnswers": ["Hotdog"],
+      "notes": "Cold Cat → Hot Dog"
+    },
+    {
+      "topic": "80s Movies",
+      "emojis": "➡️👴",
+      "answer": "Back to the Future",
+      "acceptedAnswers": ["BTTF"],
+      "notes": "Forward Old → Back Young/Future"
+    },
+    {
+      "topic": "Bands",
+      "emojis": "☀️🔇",
+      "answer": "Soundgarden",
+      "acceptedAnswers": [],
+      "notes": "Hmm, this is a stretch. Sun Silent → Sound Garden? Needs work."
+    },
+    {
+      "topic": "Movies",
+      "emojis": "☀️⬇️",
+      "answer": "Moonrise",
+      "acceptedAnswers": ["Moonrise Kingdom"],
+      "notes": "Sun Down → Moon Rise → Moonrise Kingdom"
+    },
+    {
+      "topic": "Idioms",
+      "emojis": "🥶🐔",
+      "answer": "Cold Turkey",
+      "acceptedAnswers": [],
+      "notes": "Wait this IS cold turkey... need opposite. Hot Chicken → Cold Turkey? 🔥🐔"
+    }
+  ],
+  "_notes": "These are brainstorm puzzles. Some work better than others. The mechanic needs puzzles where opposites clearly map to a known phrase."
+}

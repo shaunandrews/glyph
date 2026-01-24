@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glyph Admin — Puzzle Creator</title>
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <h1>Glyph Admin</h1>
+      <nav>
+        <a href="#puzzles" class="active">Puzzles</a>
+        <a href="#calendar">Calendar</a>
+        <a href="#stats">Stats</a>
+      </nav>
+    </header>
+
+    <main class="main">
+      <!-- Puzzle List -->
+      <section id="puzzle-list" class="section">
+        <div class="section-header">
+          <h2>Puzzles</h2>
+          <button id="new-puzzle-btn" class="btn btn-primary">+ New Puzzle</button>
+        </div>
+        
+        <div class="filters">
+          <select id="filter-status">
+            <option value="all">All</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="unscheduled">Unscheduled</option>
+          </select>
+          <input type="search" id="filter-search" placeholder="Search...">
+        </div>
+
+        <table class="puzzle-table">
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Emojis</th>
+              <th>Answer</th>
+              <th>Scheduled</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="puzzle-table-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Puzzle Editor (Modal) -->
+      <div id="puzzle-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">New Puzzle</h2>
+            <button class="modal-close" id="modal-close">&times;</button>
+          </div>
+          
+          <form id="puzzle-form">
+            <div class="form-group">
+              <label for="puzzle-topic">Topic</label>
+              <input type="text" id="puzzle-topic" placeholder="e.g., 80s Movies" required>
+            </div>
+
+            <div class="form-group">
+              <label for="puzzle-emojis">Emojis</label>
+              <input type="text" id="puzzle-emojis" placeholder="e.g., 😢🐢🔇" required>
+            </div>
+
+            <div class="form-group">
+              <label for="puzzle-answer">Correct Answer</label>
+              <input type="text" id="puzzle-answer" placeholder="The correct answer" required>
+            </div>
+
+            <div class="form-group">
+              <label>Wrong Answers (3 required)</label>
+              <input type="text" id="puzzle-wrong-1" placeholder="Wrong answer 1" required>
+              <input type="text" id="puzzle-wrong-2" placeholder="Wrong answer 2" required>
+              <input type="text" id="puzzle-wrong-3" placeholder="Wrong answer 3" required>
+            </div>
+
+            <div class="form-group">
+              <label for="puzzle-date">Schedule Date (optional)</label>
+              <input type="date" id="puzzle-date">
+            </div>
+
+            <!-- Preview -->
+            <div class="preview">
+              <h3>Preview</h3>
+              <div class="preview-topic" id="preview-topic">Topic</div>
+              <div class="preview-emojis" id="preview-emojis">🎯</div>
+              <div class="preview-options" id="preview-options">
+                <div class="preview-option correct">Correct Answer</div>
+                <div class="preview-option">Wrong 1</div>
+                <div class="preview-option">Wrong 2</div>
+                <div class="preview-option">Wrong 3</div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn" id="cancel-btn">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Puzzle</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/admin/admin.js" type="module"></script>
+</body>
+</html>
