@@ -5,6 +5,7 @@
 // State
 let puzzles = [];
 let editingPuzzle = null;
+let wrongAnswerCount = 3;
 
 // DOM Elements
 const puzzleTableBody = document.getElementById('puzzle-table-body');
@@ -15,14 +16,13 @@ const newPuzzleBtn = document.getElementById('new-puzzle-btn');
 const modalCloseBtn = document.getElementById('modal-close');
 const cancelBtn = document.getElementById('cancel-btn');
 const filterSearch = document.getElementById('filter-search');
+const addWrongBtn = document.getElementById('add-wrong-btn');
+const wrongAnswersList = document.getElementById('wrong-answers-list');
 
 // Form fields
 const topicInput = document.getElementById('puzzle-topic');
 const emojisInput = document.getElementById('puzzle-emojis');
 const answerInput = document.getElementById('puzzle-answer');
-const wrong1Input = document.getElementById('puzzle-wrong-1');
-const wrong2Input = document.getElementById('puzzle-wrong-2');
-const wrong3Input = document.getElementById('puzzle-wrong-3');
 
 // Preview
 const previewTopic = document.getElementById('preview-topic');
@@ -49,21 +49,21 @@ async function loadPuzzles() {
       topic: '90s Movies',
       emojis: '😢🐢🔇',
       answer: 'The Fast and the Furious',
-      wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction'],
+      wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction', 'Titanic', 'The Matrix', 'Fight Club'],
     },
     {
       id: 'puzzle-002',
       topic: 'Pixar',
       emojis: '⬇️',
       answer: 'Up',
-      wrongAnswers: ['Cars', 'Brave', 'Coco'],
+      wrongAnswers: ['Cars', 'Brave', 'Coco', 'Wall-E', 'Ratatouille', 'Finding Nemo'],
     },
     {
       id: 'puzzle-003',
       topic: 'Classic Rock',
       emojis: '❄️🌶️',
       answer: 'Red Hot Chili Peppers',
-      wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC'],
+      wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC', 'Guns N Roses', 'Aerosmith'],
     },
   ];
 }
@@ -94,12 +94,79 @@ function renderPuzzleTable(filter = '') {
 }
 
 /**
+ * Render wrong answer inputs
+ */
+function renderWrongAnswerInputs(values = ['', '', '']) {
+  wrongAnswerCount = Math.max(3, values.length);
+  
+  wrongAnswersList.innerHTML = values.map((val, i) => `
+    <div class="wrong-answer-row">
+      <input type="text" class="wrong-answer-input" placeholder="Wrong answer ${i + 1}" value="${val}" ${i < 3 ? 'required' : ''}>
+      ${i >= 3 ? '<button type="button" class="btn btn-small remove-wrong-btn">×</button>' : ''}
+    </div>
+  `).join('');
+  
+  // Pad to minimum 3
+  while (wrongAnswersList.children.length < 3) {
+    addWrongAnswerInput();
+  }
+  
+  // Add event listeners for remove buttons and preview updates
+  wrongAnswersList.querySelectorAll('.remove-wrong-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.target.closest('.wrong-answer-row').remove();
+      updatePreview();
+    });
+  });
+  
+  wrongAnswersList.querySelectorAll('.wrong-answer-input').forEach(input => {
+    input.addEventListener('input', updatePreview);
+  });
+}
+
+/**
+ * Add a wrong answer input
+ */
+function addWrongAnswerInput() {
+  const count = wrongAnswersList.children.length;
+  const div = document.createElement('div');
+  div.className = 'wrong-answer-row';
+  div.innerHTML = `
+    <input type="text" class="wrong-answer-input" placeholder="Wrong answer ${count + 1}">
+    ${count >= 3 ? '<button type="button" class="btn btn-small remove-wrong-btn">×</button>' : ''}
+  `;
+  
+  wrongAnswersList.appendChild(div);
+  
+  const removeBtn = div.querySelector('.remove-wrong-btn');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', () => {
+      div.remove();
+      updatePreview();
+    });
+  }
+  
+  div.querySelector('.wrong-answer-input').addEventListener('input', updatePreview);
+  div.querySelector('.wrong-answer-input').focus();
+}
+
+/**
+ * Get wrong answers from inputs
+ */
+function getWrongAnswers() {
+  return Array.from(wrongAnswersList.querySelectorAll('.wrong-answer-input'))
+    .map(input => input.value.trim())
+    .filter(Boolean);
+}
+
+/**
  * Setup event listeners
  */
 function setupEventListeners() {
   newPuzzleBtn.addEventListener('click', () => openModal());
   modalCloseBtn.addEventListener('click', closeModal);
   cancelBtn.addEventListener('click', closeModal);
+  addWrongBtn.addEventListener('click', addWrongAnswerInput);
 
   puzzleModal.addEventListener('click', (e) => {
     if (e.target === puzzleModal) closeModal();
@@ -111,9 +178,6 @@ function setupEventListeners() {
   topicInput.addEventListener('input', updatePreview);
   emojisInput.addEventListener('input', updatePreview);
   answerInput.addEventListener('input', updatePreview);
-  wrong1Input.addEventListener('input', updatePreview);
-  wrong2Input.addEventListener('input', updatePreview);
-  wrong3Input.addEventListener('input', updatePreview);
 
   // Search filter
   filterSearch.addEventListener('input', (e) => {
@@ -147,11 +211,10 @@ function openModal(puzzle = null) {
     topicInput.value = puzzle.topic;
     emojisInput.value = puzzle.emojis;
     answerInput.value = puzzle.answer;
-    wrong1Input.value = puzzle.wrongAnswers[0] || '';
-    wrong2Input.value = puzzle.wrongAnswers[1] || '';
-    wrong3Input.value = puzzle.wrongAnswers[2] || '';
+    renderWrongAnswerInputs(puzzle.wrongAnswers);
   } else {
     puzzleForm.reset();
+    renderWrongAnswerInputs(['', '', '']);
   }
 
   updatePreview();
@@ -188,13 +251,15 @@ function updatePreview() {
   previewEmojis.textContent = emojisInput.value || '🎯';
   
   const correct = answerInput.value || 'Correct Answer';
-  const wrong = [
-    wrong1Input.value || 'Wrong 1',
-    wrong2Input.value || 'Wrong 2',
-    wrong3Input.value || 'Wrong 3',
-  ];
+  const wrong = getWrongAnswers();
   
-  const options = shuffle([correct, ...wrong]);
+  // Show up to 3 wrong answers in preview (shuffled)
+  const wrongPreview = shuffle(wrong).slice(0, 3);
+  while (wrongPreview.length < 3) {
+    wrongPreview.push(`Wrong ${wrongPreview.length + 1}`);
+  }
+  
+  const options = shuffle([correct, ...wrongPreview]);
   
   previewOptions.innerHTML = options.map(opt => `
     <div class="preview-option ${opt === correct ? 'correct' : ''}">${opt}</div>
@@ -207,15 +272,18 @@ function updatePreview() {
 async function handleSubmit(e) {
   e.preventDefault();
 
+  const wrongAnswers = getWrongAnswers();
+  
+  if (wrongAnswers.length < 3) {
+    alert('Please provide at least 3 wrong answers');
+    return;
+  }
+
   const puzzleData = {
     topic: topicInput.value.trim(),
     emojis: emojisInput.value.trim(),
     answer: answerInput.value.trim(),
-    wrongAnswers: [
-      wrong1Input.value.trim(),
-      wrong2Input.value.trim(),
-      wrong3Input.value.trim(),
-    ],
+    wrongAnswers,
   };
 
   if (editingPuzzle) {

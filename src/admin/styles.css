@@ -293,8 +293,23 @@ body {
   background: rgba(34, 197, 94, 0.1);
 }
 
-/* Stacked inputs */
-.form-group input + input {
+/* Wrong answer rows */
+.wrong-answer-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.wrong-answer-row input {
+  flex: 1;
+}
+
+.wrong-answer-row .btn {
+  padding: 0.5rem 0.75rem;
+  flex-shrink: 0;
+}
+
+#add-wrong-btn {
   margin-top: 0.5rem;
 }
 

@@ -32,21 +32,21 @@ const puzzles = [
     topic: '90s Movies',
     emojis: '😢🐢🔇',
     answer: 'The Fast and the Furious',
-    wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction'],
+    wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction', 'Titanic', 'The Matrix', 'Fight Club'],
   },
   {
     id: 'puzzle-002',
     topic: 'Pixar',
     emojis: '⬇️',
     answer: 'Up',
-    wrongAnswers: ['Cars', 'Brave', 'Coco'],
+    wrongAnswers: ['Cars', 'Brave', 'Coco', 'Wall-E', 'Ratatouille', 'Finding Nemo'],
   },
   {
     id: 'puzzle-003',
     topic: 'Classic Rock',
     emojis: '❄️🌶️',
     answer: 'Red Hot Chili Peppers',
-    wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC'],
+    wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC', 'Guns N Roses', 'Aerosmith'],
   },
 ];
 
@@ -71,6 +71,14 @@ function getRandomPuzzle() {
   return puzzles[Math.floor(Math.random() * puzzles.length)];
 }
 
+/**
+ * Pick n random items from array
+ */
+function pickRandom(array, n) {
+  const shuffled = shuffle(array);
+  return shuffled.slice(0, n);
+}
+
 function handleRequest(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   let path = url.pathname;
@@ -88,7 +96,8 @@ function handleRequest(req, res) {
   // API: Get a puzzle (random)
   if (path === '/api/puzzle' && req.method === 'GET') {
     const puzzle = getRandomPuzzle();
-    const options = shuffle([puzzle.answer, ...puzzle.wrongAnswers]);
+    const wrongThree = pickRandom(puzzle.wrongAnswers, 3);
+    const options = shuffle([puzzle.answer, ...wrongThree]);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
@@ -110,7 +119,8 @@ function handleRequest(req, res) {
       return res.end(JSON.stringify({ error: 'Puzzle not found' }));
     }
 
-    const options = shuffle([puzzle.answer, ...puzzle.wrongAnswers]);
+    const wrongThree = pickRandom(puzzle.wrongAnswers, 3);
+    const options = shuffle([puzzle.answer, ...wrongThree]);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
