@@ -16,13 +16,6 @@ A puzzle game where you decode emoji clues by thinking in opposites. Each emoji 
 3. Think of the **opposite** of each emoji
 4. Pick the answer that fits
 
-### Example
-
-- **Topic:** Sci-Fi Movies
-- **Emoji:** ⭐☮️ (Star + Peace)
-- **Opposite:** Star + War
-- **Answer:** Star Wars
-
 ## Tech Stack
 
 - **Frontend:** Vanilla HTML/CSS/JS
