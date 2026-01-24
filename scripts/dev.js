@@ -257,10 +257,10 @@ async function handleRequest(req, res) {
 
         const solveData = {
           puzzleId,
-          playerId,
           answerSubmitted: answer,
           correct,
         };
+        if (playerId) solveData.playerId = playerId;
 
         if (useFirebase) {
           await fbRecordSolve(solveData);
@@ -273,7 +273,8 @@ async function handleRequest(req, res) {
           correct,
           answer: puzzle.answer,
         }));
-      } catch {
+      } catch (e) {
+        console.error('Solve error:', e);
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Invalid request' }));
       }
