@@ -9,6 +9,7 @@ let wrongAnswerCount = 3;
 
 // DOM Elements
 const puzzleTableBody = document.getElementById('puzzle-table-body');
+const puzzleCards = document.getElementById('puzzle-cards');
 const puzzleModal = document.getElementById('puzzle-modal');
 const puzzleForm = document.getElementById('puzzle-form');
 const modalTitle = document.getElementById('modal-title');
@@ -53,7 +54,7 @@ async function loadPuzzles() {
 }
 
 /**
- * Render puzzle table
+ * Render puzzle list (table + cards)
  */
 function renderPuzzleTable(filter = '') {
   const filtered = filter 
@@ -64,6 +65,7 @@ function renderPuzzleTable(filter = '') {
       )
     : puzzles;
 
+  // Table for desktop
   puzzleTableBody.innerHTML = filtered.map(puzzle => `
     <tr data-id="${puzzle.id}">
       <td>${puzzle.topic}</td>
@@ -74,6 +76,21 @@ function renderPuzzleTable(filter = '') {
         <button class="btn btn-small delete-btn" data-id="${puzzle.id}">Delete</button>
       </td>
     </tr>
+  `).join('');
+  
+  // Cards for mobile
+  puzzleCards.innerHTML = filtered.map(puzzle => `
+    <div class="puzzle-card" data-id="${puzzle.id}">
+      <div class="puzzle-card-header">
+        <span class="puzzle-card-topic">${puzzle.topic}</span>
+      </div>
+      <div class="puzzle-card-emojis">${puzzle.emojis}</div>
+      <div class="puzzle-card-answer">${puzzle.answer}</div>
+      <div class="puzzle-card-actions">
+        <button class="btn btn-small edit-btn" data-id="${puzzle.id}">Edit</button>
+        <button class="btn btn-small delete-btn" data-id="${puzzle.id}">Delete</button>
+      </div>
+    </div>
   `).join('');
 }
 
@@ -168,8 +185,8 @@ function setupEventListeners() {
     renderPuzzleTable(e.target.value.toLowerCase());
   });
 
-  // Table actions
-  puzzleTableBody.addEventListener('click', (e) => {
+  // Table/card actions
+  function handleListClick(e) {
     const editBtn = e.target.closest('.edit-btn');
     const deleteBtn = e.target.closest('.delete-btn');
 
@@ -181,7 +198,10 @@ function setupEventListeners() {
     if (deleteBtn) {
       handleDelete(deleteBtn.dataset.id);
     }
-  });
+  }
+  
+  puzzleTableBody.addEventListener('click', handleListClick);
+  puzzleCards.addEventListener('click', handleListClick);
 }
 
 /**
