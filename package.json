@@ -16,6 +16,7 @@
   ],
   "author": "Shaun Andrews",
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  }
 }

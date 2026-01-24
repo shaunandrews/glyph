@@ -42,30 +42,14 @@ async function init() {
  * Load puzzles from API
  */
 async function loadPuzzles() {
-  // TODO: Replace with actual API call
-  puzzles = [
-    {
-      id: 'puzzle-001',
-      topic: '90s Movies',
-      emojis: '😢🐢🔇',
-      answer: 'The Fast and the Furious',
-      wrongAnswers: ['Forrest Gump', 'The Silence of the Lambs', 'Pulp Fiction', 'Titanic', 'The Matrix', 'Fight Club'],
-    },
-    {
-      id: 'puzzle-002',
-      topic: 'Pixar',
-      emojis: '⬇️',
-      answer: 'Up',
-      wrongAnswers: ['Cars', 'Brave', 'Coco', 'Wall-E', 'Ratatouille', 'Finding Nemo'],
-    },
-    {
-      id: 'puzzle-003',
-      topic: 'Classic Rock',
-      emojis: '❄️🌶️',
-      answer: 'Red Hot Chili Peppers',
-      wrongAnswers: ['The Rolling Stones', 'Led Zeppelin', 'AC/DC', 'Guns N Roses', 'Aerosmith'],
-    },
-  ];
+  try {
+    const res = await fetch('/api/puzzles');
+    if (!res.ok) throw new Error('Failed to load');
+    puzzles = await res.json();
+  } catch (e) {
+    console.error('Failed to load puzzles:', e);
+    puzzles = [];
+  }
 }
 
 /**
@@ -301,20 +285,35 @@ async function handleSubmit(e) {
  * Create puzzle via API
  */
 async function createPuzzle(data) {
-  // TODO: Replace with actual API call
-  console.log('Creating puzzle:', data);
-  puzzles.push({ id: `puzzle-${Date.now()}`, ...data });
+  try {
+    const res = await fetch('/api/puzzles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to create');
+    return await res.json();
+  } catch (e) {
+    console.error('Failed to create puzzle:', e);
+    alert('Failed to create puzzle');
+  }
 }
 
 /**
  * Update puzzle via API
  */
 async function updatePuzzle(id, data) {
-  // TODO: Replace with actual API call
-  console.log('Updating puzzle:', id, data);
-  const index = puzzles.findIndex(p => p.id === id);
-  if (index !== -1) {
-    puzzles[index] = { ...puzzles[index], ...data };
+  try {
+    const res = await fetch(`/api/puzzle/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to update');
+    return await res.json();
+  } catch (e) {
+    console.error('Failed to update puzzle:', e);
+    alert('Failed to update puzzle');
   }
 }
 
@@ -324,10 +323,17 @@ async function updatePuzzle(id, data) {
 async function handleDelete(id) {
   if (!confirm('Delete this puzzle?')) return;
 
-  // TODO: Replace with actual API call
-  console.log('Deleting puzzle:', id);
-  puzzles = puzzles.filter(p => p.id !== id);
-  renderPuzzleTable();
+  try {
+    const res = await fetch(`/api/puzzle/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete');
+    await loadPuzzles();
+    renderPuzzleTable();
+  } catch (e) {
+    console.error('Failed to delete puzzle:', e);
+    alert('Failed to delete puzzle');
+  }
 }
 
 // Initialize
