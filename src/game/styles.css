@@ -116,22 +116,10 @@ body {
   opacity: 0.5;
 }
 
-/* Result */
-.result {
-  text-align: center;
-}
-
-.result.hidden {
-  display: none;
-}
-
-.result-emoji {
-  font-size: 4rem;
-}
-
 /* Next Button */
 .next-btn {
   width: 100%;
+  margin-top: 1.5rem;
   padding: 1rem;
   font-size: 1.125rem;
   font-weight: 600;

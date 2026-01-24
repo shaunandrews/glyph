@@ -10,8 +10,6 @@ let solved = false;
 const topicEl = document.getElementById('topic');
 const emojisEl = document.getElementById('emojis');
 const optionsEl = document.getElementById('options');
-const resultEl = document.getElementById('result');
-const resultEmoji = document.getElementById('result-emoji');
 const nextBtn = document.getElementById('next-btn');
 
 /**
@@ -27,7 +25,6 @@ async function init() {
  */
 async function loadPuzzle() {
   solved = false;
-  resultEl.classList.add('hidden');
   nextBtn.classList.add('hidden');
   optionsEl.innerHTML = '';
   
@@ -94,12 +91,13 @@ async function handleOptionClick(answer, btn) {
     b.disabled = true;
     if (b.textContent === puzzle.correctAnswer) {
       b.classList.add('correct');
+      b.textContent = '🎉 ' + b.textContent;
     } else if (b === btn && !result.correct) {
       b.classList.add('incorrect');
     }
   });
   
-  showResult(result.correct);
+  nextBtn.classList.remove('hidden');
 }
 
 /**
@@ -117,15 +115,6 @@ async function submitGuess(puzzleId, guess) {
     console.error('Failed to submit:', e);
     return { correct: false };
   }
-}
-
-/**
- * Show the result
- */
-function showResult(correct) {
-  resultEmoji.textContent = correct ? '🎉' : '😔';
-  resultEl.classList.remove('hidden');
-  nextBtn.classList.remove('hidden');
 }
 
 /**
