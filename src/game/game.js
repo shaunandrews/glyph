@@ -11,9 +11,7 @@ const topicEl = document.getElementById('topic');
 const emojisEl = document.getElementById('emojis');
 const optionsEl = document.getElementById('options');
 const resultEl = document.getElementById('result');
-const resultStatus = document.getElementById('result-status');
-const resultAnswer = document.getElementById('result-answer');
-const shareBtn = document.getElementById('share-btn');
+const resultEmoji = document.getElementById('result-emoji');
 const nextBtn = document.getElementById('next-btn');
 
 /**
@@ -21,7 +19,6 @@ const nextBtn = document.getElementById('next-btn');
  */
 async function init() {
   await loadPuzzle();
-  shareBtn.addEventListener('click', handleShare);
   nextBtn.addEventListener('click', handleNext);
 }
 
@@ -31,6 +28,7 @@ async function init() {
 async function loadPuzzle() {
   solved = false;
   resultEl.classList.add('hidden');
+  nextBtn.classList.add('hidden');
   optionsEl.innerHTML = '';
   
   puzzle = await fetchPuzzle();
@@ -89,7 +87,7 @@ async function handleOptionClick(answer, btn) {
   
   const result = await submitGuess(puzzle.id, answer);
   
-  solved = result.correct;
+  solved = true;
   
   // Mark buttons
   document.querySelectorAll('.option-btn').forEach(b => {
@@ -101,7 +99,7 @@ async function handleOptionClick(answer, btn) {
     }
   });
   
-  showResult(result);
+  showResult(result.correct);
 }
 
 /**
@@ -117,25 +115,17 @@ async function submitGuess(puzzleId, guess) {
     return await res.json();
   } catch (e) {
     console.error('Failed to submit:', e);
-    return { correct: false, answer: 'Error' };
+    return { correct: false };
   }
 }
 
 /**
  * Show the result
  */
-function showResult(result) {
+function showResult(correct) {
+  resultEmoji.textContent = correct ? '🎉' : '😔';
   resultEl.classList.remove('hidden');
-
-  if (result.correct) {
-    resultStatus.textContent = '🎉 Correct!';
-    resultStatus.className = 'result-status correct';
-  } else {
-    resultStatus.textContent = '❌ Not quite';
-    resultStatus.className = 'result-status incorrect';
-  }
-
-  resultAnswer.textContent = result.answer;
+  nextBtn.classList.remove('hidden');
 }
 
 /**
@@ -143,33 +133,6 @@ function showResult(result) {
  */
 function handleNext() {
   loadPuzzle();
-}
-
-/**
- * Handle share button
- */
-function handleShare() {
-  const shareText = generateShareText();
-  
-  if (navigator.share) {
-    navigator.share({ text: shareText });
-  } else {
-    navigator.clipboard.writeText(shareText);
-    shareBtn.textContent = 'Copied!';
-    setTimeout(() => shareBtn.textContent = 'Share', 2000);
-  }
-}
-
-/**
- * Generate share card text
- */
-function generateShareText() {
-  return `Glyph — ${puzzle.topic}
-${puzzle.emojis}
-
-${solved ? '🟩 Solved!' : '🟥 Stumped'}
-
-playglyph.com`;
 }
 
 /**
