@@ -93,7 +93,6 @@ async function handleOptionClick(answer, btn) {
   
   if (result.correct) {
     btn.classList.add('correct');
-    btn.textContent = '🎉 ' + btn.textContent;
   } else {
     btn.classList.add('incorrect');
   }
