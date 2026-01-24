@@ -89,13 +89,14 @@ async function handleOptionClick(answer, btn) {
   // Mark buttons
   document.querySelectorAll('.option-btn').forEach(b => {
     b.disabled = true;
-    if (b.textContent === puzzle.correctAnswer) {
-      b.classList.add('correct');
-      b.textContent = '🎉 ' + b.textContent;
-    } else if (b === btn && !result.correct) {
-      b.classList.add('incorrect');
-    }
   });
+  
+  if (result.correct) {
+    btn.classList.add('correct');
+    btn.textContent = '🎉 ' + btn.textContent;
+  } else {
+    btn.classList.add('incorrect');
+  }
   
   nextBtn.classList.remove('hidden');
 }
