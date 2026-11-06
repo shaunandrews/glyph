@@ -116,9 +116,6 @@ body {
   background: rgba(239, 68, 68, 0.12);
 }
 
-.option-btn:disabled:not(.correct):not(.incorrect) {
-  opacity: 0.5;
-}
 
 /* Next Button */
 .next-btn {
@@ -142,6 +139,78 @@ body {
 
 .next-btn:active {
   transform: scale(0.98);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes correctPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: var(--color-surface);
+  border-radius: 8px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-topic {
+  height: 1.75rem;
+  width: 140px;
+  margin: 0 auto;
+}
+
+.skeleton-emojis {
+  height: 5rem;
+  width: 200px;
+  border-radius: 12px;
+}
+
+.skeleton-option {
+  height: 56px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Fade Transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Answer Animations */
+.option-btn.correct {
+  animation: correctPop 0.4s ease;
+}
+
+.option-btn.incorrect {
+  animation: shake 0.4s ease;
+}
+
+.option-btn.fade-other {
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
 }
 
 /* Utility */

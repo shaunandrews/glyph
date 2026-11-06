@@ -54,37 +54,44 @@
           </div>
           
           <form id="puzzle-form">
-            <div class="form-group">
-              <label for="puzzle-topic">Topic</label>
-              <input type="text" id="puzzle-topic" placeholder="e.g., 80s Movies" required>
-            </div>
+            <div class="form-body">
+              <div class="form-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="puzzle-topic">Topic</label>
+                    <input type="text" id="puzzle-topic" placeholder="e.g., 80s Movies" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="puzzle-emojis">Emojis</label>
+                    <input type="text" id="puzzle-emojis" placeholder="e.g., 😢🐢🔇" required>
+                  </div>
+                </div>
 
-            <div class="form-group">
-              <label for="puzzle-emojis">Emojis</label>
-              <input type="text" id="puzzle-emojis" placeholder="e.g., 😢🐢🔇" required>
-            </div>
+                <div class="form-group">
+                  <label for="puzzle-answer">Correct Answer</label>
+                  <input type="text" id="puzzle-answer" placeholder="The correct answer" required>
+                </div>
 
-            <div class="form-group">
-              <label for="puzzle-answer">Correct Answer</label>
-              <input type="text" id="puzzle-answer" placeholder="The correct answer" required>
-            </div>
+                <div class="form-group">
+                  <label>Wrong Answers <span class="label-hint">(minimum 3)</span></label>
+                  <div id="wrong-answers-list"></div>
+                  <button type="button" id="add-wrong-btn" class="btn btn-small">+ Add Another</button>
+                </div>
+              </div>
 
-            <div class="form-group">
-              <label>Wrong Answers (minimum 3)</label>
-              <div id="wrong-answers-list"></div>
-              <button type="button" id="add-wrong-btn" class="btn btn-small">+ Add Another</button>
-            </div>
-
-            <!-- Preview -->
-            <div class="preview">
-              <h3>Preview</h3>
-              <div class="preview-topic" id="preview-topic">Topic</div>
-              <div class="preview-emojis" id="preview-emojis">🎯</div>
-              <div class="preview-options" id="preview-options">
-                <div class="preview-option correct">Correct Answer</div>
-                <div class="preview-option">Wrong 1</div>
-                <div class="preview-option">Wrong 2</div>
-                <div class="preview-option">Wrong 3</div>
+              <!-- Preview -->
+              <div class="preview">
+                <h3>Preview</h3>
+                <div class="preview-card">
+                  <div class="preview-topic" id="preview-topic">Topic</div>
+                  <div class="preview-emojis" id="preview-emojis">🎯</div>
+                  <div class="preview-options" id="preview-options">
+                    <div class="preview-option correct">Correct Answer</div>
+                    <div class="preview-option">Wrong 1</div>
+                    <div class="preview-option">Wrong 2</div>
+                    <div class="preview-option">Wrong 3</div>
+                  </div>
+                </div>
               </div>
             </div>
 
