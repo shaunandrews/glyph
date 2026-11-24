@@ -8,5 +8,10 @@
   },
   "devDependencies": {
     "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "check": "node tools/gen-puzzle-index.mjs && node tools/check-puzzles.mjs && node tools/check-day.mjs && tsc -p .",
+    "dev": "sf dev --state-backend sqlite",
+    "publish": "npm run check && sf publish --target production --wait -y"
   }
 }
