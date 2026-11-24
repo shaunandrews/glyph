@@ -79,7 +79,7 @@ export function useNotice(): [string | null, (s: string) => void] {
 }
 
 export const Middle = (props: { children: ComponentChildren }) => (
-  <div class="g-grow g-center" style="gap:24px;padding:12px 0 20px">
+  <div class="g-grow g-center g-mid">
     {props.children}
   </div>
 );

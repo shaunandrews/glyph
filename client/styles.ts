@@ -95,6 +95,22 @@ button{font:inherit;color:inherit;cursor:pointer}
 .g-rung{display:grid;grid-template-columns:44px auto 14px;align-items:center;gap:12px}
 .g-rung .g-slots b{width:40px;height:44px}
 .g-chainends{display:flex;justify-content:space-between;align-items:center}
+.g-mid{gap:24px;padding:12px 0 20px;justify-content:safe center;min-height:0}
+/* keyboard up: the app shrinks to the space above the keyboard (html.kb, set from visualViewport) */
+html.kb,html.kb body{overflow:hidden;height:100%}
+html.kb .g-app{position:fixed;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100dvh);min-height:0;overflow:hidden}
+html.kb .g-header{padding-top:calc(env(safe-area-inset-top) + 2px);padding-bottom:2px;min-height:52px}
+html.kb .g-screen{padding-bottom:calc(8px + var(--kbpad,0px))}
+html.kb .g-mid{gap:8px;padding:2px 0;overflow-y:auto}
+html.kb .g-mid .g-st.lg{--s:76px;--e:3px}
+html.kb .g-mid .g-st.md{--s:36px;--e:2px}
+html.kb .g-mid .g-st.md .g-meta{display:none}
+html.kb .g-mid .g-st.sm{--s:30px}
+html.kb .g-rungs{gap:4px}
+html.kb .g-rung{grid-template-columns:32px auto 14px}
+html.kb .g-slots b,html.kb .g-rung .g-slots b,html.kb .g-slots.small b{height:32px;font-size:17px}
+html.kb .g-screen{position:relative}
+html.kb .g-screen>.g-btn.quiet{position:absolute;top:4px;right:20px;width:auto;height:30px;padding:0 12px;font-size:15px;border-radius:12px}
 /* sheets */
 .g-dim{position:fixed;inset:0;background:rgba(34,32,28,.38);z-index:20}
 .g-sheet{position:fixed;left:0;right:0;bottom:0;max-width:430px;margin:0 auto;background:var(--canvas);border-radius:20px 20px 0 0;padding:14px 24px calc(env(safe-area-inset-bottom) + 24px);display:flex;flex-direction:column;gap:20px;z-index:21;max-height:90dvh;overflow:auto}
@@ -140,6 +156,31 @@ export function injectStyles() {
   apple.href = "https://glyph-art.space.fast/icon-180.png";
   document.head.append(icon, apple);
   document.title = "Glyph";
+  watchKeyboard();
+}
+
+// When the on-screen keyboard is up, the visual viewport is shorter than the window.
+// Size the app to what is left, so the board and the letter slots stay above the keyboard.
+function watchKeyboard() {
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const root = document.documentElement;
+  // Safari in a tab floats its address pill over the bottom of the page while typing; a home-screen app has none.
+  const standalone = (navigator as any).standalone || matchMedia("(display-mode: standalone)").matches;
+  const sync = () => {
+    const up = window.innerHeight - vv.height > 120 && document.activeElement?.tagName === "INPUT";
+    root.classList.toggle("kb", up);
+    if (up) {
+      root.style.setProperty("--vvh", `${vv.height}px`);
+      root.style.setProperty("--vvt", `${vv.offsetTop}px`);
+      root.style.setProperty("--kbpad", standalone ? "0px" : "52px");
+      document.querySelector(".g-slots b.cur")?.scrollIntoView({ block: "nearest" });
+    }
+  };
+  vv.addEventListener("resize", sync);
+  vv.addEventListener("scroll", sync);
+  document.addEventListener("focusin", () => setTimeout(sync, 60));
+  document.addEventListener("focusout", () => setTimeout(sync, 60));
 }
 
 // The app icon: a white Fredoka G on purple.
